@@ -1,0 +1,395 @@
+@startuml
+class OmimonFull.Omidex.Omidex {
+- Random random
+- {static} Omidex instance
+- {static} HashSet<OmimonType> omidex
+- Attack.AttackBuilder attackBuilder
+- {static} ArrayList<Attack> attacks
+~ OmimonType.OmimonBuilder omimonBuilder
+- <<Create>> Omidex()
++ {static} Omidex getInstance()
++ void printAll()
++ HashSet<OmimonType> getOmidexHashSet()
++ ArrayList<Attack> getAttacks()
+}
+
+
+interface OmimonFull.Strategys.AttackStrategies.AttackStrategy {
+~ Attack getAttack(List<Attack>,Types[])
+}
+
+class OmimonFull.Omidex.Omimons.OmimonType {
+- String name
+- Types[] types
+- Value_Range health_range
+- Value_Range defense_range
+- Value_Range speed_range
+- List<Attack> attacks
+- OmimonType improvedOmimonType
+- int evoLevel
+- boolean isNextForm
+- <<Create>> OmimonType(OmimonBuilder)
++ OmimonType getImprovedOmimon()
++ String getName()
++ void setImprovedOmimonType(OmimonType)
++ Types[] getOmimonTypes()
++ Value_Range getHealth()
++ Value_Range getDefense()
++ Value_Range getSpeed()
++ List<Attack> getAttacks()
++ void setIsNextForm(boolean)
++ int getEvoLevel()
++ boolean setIsNextForm()
++ Types[] getTypes()
++ OmimonType getImprovedOmimonType()
++ String toString()
++ boolean isNextForm()
+}
+
+
+class OmimonFull.Omidex.Omimons.OmimonType$OmimonBuilder {
+- String name
+- boolean isNextForm
+- Types[] types
+- Value_Range health
+- Value_Range defense
+- Value_Range speed
+- List<Attack> attacks
+- OmimonType improvedOmimonType
+- int evoLevel
++ <<Create>> OmimonBuilder()
++ OmimonBuilder reset()
++ OmimonBuilder setName(String)
++ OmimonBuilder setOmimonTypes(Types[])
++ OmimonBuilder setHealth(Value_Range)
++ OmimonBuilder setDefense(Value_Range)
++ OmimonBuilder setSpeed(Value_Range)
++ OmimonBuilder setAttacks(List<Attack>)
++ OmimonBuilder addAttack(Attack)
++ OmimonBuilder setImprovedOmimon(OmimonType)
++ OmimonBuilder setEvoLevel(int)
++ OmimonBuilder setNextForm(boolean)
++ OmimonType build()
+}
+
+
+class OmimonFull.Strategys.AttackStrategies.SmartAttackStrategy {
++ Attack getAttack(List<Attack>,Types[])
+}
+
+class OmimonFull.AddEff.StrikeAttack {
+~ Random random
++ int modifyDamage(int,OmimonInstance)
+}
+
+
+class OmimonFull.Battle.BattleLogger {
+- int roundCounter
++ void logStart(BattleParticipant,BattleParticipant)
++ void logNextRound()
++ void logWinner(BattleParticipant)
++ void logProblem(String)
++ void logAction(BattleParticipant,Action,BattleParticipant,Action)
++ void logBPNameAndOmimons(BattleParticipant,ArrayList<OmimonInstance>,OmimonInstance)
++ void logFlee(String)
++ void logAttack(String,String)
++ void logNoSwitchPossible(String)
++ void logSwitchedTo(String,String)
+}
+
+
+interface OmimonFull.Trainer.BattleParticipant {
+~ Action chooseNextAction(OmimonInstance,OmimonInstance,Boolean)
+~ AttackStrategy getAttackStrategy()
+~ String getName()
+~ ArrayList<OmimonInstance> getOmimonsList()
+~ String toString()
+}
+
+class OmimonFull.Strategys.SmartStrategy {
++ Action chooseAction(OmimonInstance,OmimonInstance,Boolean)
+}
+
+class OmimonFull.Attack.Attack {
+- String name
+- Types attackType
+- int basePower
+- ArrayList<AttackEffect> attackEffects
+- <<Create>> Attack(AttackBuilder)
++ String getName()
++ Types getType()
++ double calculateEfficiencyAgainst(Types[])
++ int calculateDamageWithEfficiency(Types[])
++ int calculateDamage(OmimonInstance,Types[])
++ int getBasePower()
++ String toString()
+}
+
+
+class OmimonFull.Attack.Attack$AttackBuilder {
+- String name
+- Types attackType
+- int basePower
+- ArrayList<AttackEffect> attackEffects
++ AttackBuilder setName(String)
++ AttackBuilder setAttackType(Types)
++ AttackBuilder addEffect(AttackEffect)
++ AttackBuilder removeEffect(AttackEffect)
++ AttackBuilder setBasePower(int)
++ Attack build()
++ AttackBuilder reset()
+}
+
+
+class OmimonFull.Strategys.CarefulStrategy {
++ Action chooseAction(OmimonInstance,OmimonInstance,Boolean)
+}
+
+interface OmimonFull.Attack.IAttack {
+~ int calculateDamage(OmimonInstance,Types[])
+~ int getBasePower()
+~ Types getType()
+~ double calculateEfficiencyAgainst(Types[])
+~ int calculateDamageWithEfficiency(Types[])
+}
+
+class OmimonFull.Battle.Battle {
+~ BattleLogger battleLogger
+- Random random
+- ArrayList<OmimonInstance> ownOmimons
+- ArrayList<OmimonInstance> anotherOmimons
+- Action firstAction
+- Action secondAction
+- BattleParticipant battleParticipant1
+- BattleParticipant battleParticipant2
+- OmimonInstance currentOmimon1
+- OmimonInstance currentOmimon2
+- boolean isAgainstTrainer
++ void battle(BattleParticipant,BattleParticipant)
++ void battle(BattleParticipant)
+- boolean trySetValues(BattleParticipant,BattleParticipant)
+- void startBattle()
+- void nextRound()
+- void processActions()
+- void processAction(Action,BattleParticipant)
+- void fleeFromBattle(BattleParticipant)
+- void attackOmimon(OmimonInstance,OmimonInstance)
+- void processAttacks()
+- boolean isFirstInCharge()
+- void switchOmimon(OmimonInstance,ArrayList<OmimonInstance>)
+- OmimonInstance getRandomOmimon(OmimonInstance,ArrayList<OmimonInstance>)
+- void isDead(ArrayList<OmimonInstance>,OmimonInstance)
+- void isEnd()
+- BattleParticipant getWinner()
+- void stopGame()
+- void resetOmis()
+}
+
+
+interface OmimonFull.Strategys.ActionStrategy {
+~ Action chooseAction(OmimonInstance,OmimonInstance,Boolean)
+}
+
+class OmimonFull.Exceptions.NotEnoughOmimonsToPlayException {
++ <<Create>> NotEnoughOmimonsToPlayException()
+}
+
+class OmimonFull.Exceptions.NoMoreOmimonException {
++ <<Create>> NoMoreOmimonException()
+}
+
+class OmimonFull.AddEff.HealingEffect {
++ int modifyDamage(int,OmimonInstance)
+}
+
+enum OmimonFull.Omidex.Omimons.Types {
++  FIRE
++  WATER
++  PLANT
++  NORMAL
++ double getEfficiency(Types[])
+}
+
+
+class OmimonFull.Strategys.AttackStrategies.RandomStrategy {
+~ Random random
++ Attack getAttack(List<Attack>,Types[])
+}
+
+
+interface OmimonFull.AddEff.AttackEffect {
+~ int modifyDamage(int,OmimonInstance)
+}
+
+class OmimonFull.Main {
++ {static} void main(String[])
+}
+
+class OmimonFull.Trainer.WildOmimon {
++ Generator generator
+~ AttackStrategy attackStrategy
+~ ActionStrategy actionStrategy
+~ OmimonInstance omimonInstance
+~ ArrayList<OmimonInstance> omimonInstances
++ <<Create>> WildOmimon()
++ Action chooseNextAction(OmimonInstance,OmimonInstance,Boolean)
++ AttackStrategy getAttackStrategy()
++ String getName()
++ String toString()
++ ArrayList<OmimonInstance> getOmimonsList()
++ OmimonInstance getOmimonInstance()
+}
+
+
+enum OmimonFull.Battle.Action {
++  FLEE
++  ATTACK
++  SWITCH
+}
+
+class OmimonFull.Omidex.Generator {
+~ Omidex omidex
+- {static} Generator generator
+~ Attack.AttackBuilder attackBuilder
+~ Random random
+~ ActionStrategy SmartStrategy
+~ ActionStrategy ConfidentStrategy
+~ ActionStrategy CarefulStrategy
+~ ArrayList<ActionStrategy> actionStrategies
+~ AttackStrategy a
+~ AttackStrategy b
+~ AttackStrategy c
+~ ArrayList<AttackStrategy> attackStrategies
+- <<Create>> Generator()
++ AttackStrategy getRandomAttackStrategy()
++ ActionStrategy getRandomActionStrategy()
++ {static} Generator getGenerator()
+- OmimonType getRandomOmimonType()
++ OmimonInstance getRandomOmimonInstance()
+}
+
+
+class OmimonFull.Strategys.AttackStrategies.PowerStrategy {
++ Attack getAttack(List<Attack>,Types[])
+}
+
+enum OmimonFull.Trainer.Gender {
++  M
++  F
++  D
+}
+
+class OmimonFull.AddEff.CriticalAttack {
+~ Random random
++ int modifyDamage(int,OmimonInstance)
+}
+
+
+class OmimonFull.Strategys.ConfidentStrategy {
++ Action chooseAction(OmimonInstance,OmimonInstance,Boolean)
+}
+
+class OmimonFull.Omidex.Omimons.Value_Range {
+~ Random random
+- int min
+- int max
++ <<Create>> Value_Range(int,int)
++ int getMin()
++ int getMax()
++ int getRandomValue()
++ String toString()
+}
+
+
+class OmimonFull.Trainer.Trainer {
+~ Random random
+- int id
+- String name
+- Gender gender
+- {static} int id_counter
+- ArrayList<OmimonInstance> omimonInstances
+- ActionStrategy actionStrategy
+- AttackStrategy attackStrategy
+- Generator generator
++ <<Create>> Trainer(String,Gender)
++ void setActionStrategy(ActionStrategy)
++ void setAttackStrategy(AttackStrategy)
++ int getId()
++ AttackStrategy getAttackStrategy()
++ Action chooseNextAction(OmimonInstance,OmimonInstance,Boolean)
++ ArrayList<OmimonInstance> getOmimonsList()
++ ActionStrategy getActionStrategy()
++ String getName()
++ Gender getGender()
++ void catchOmimon()
++ String toString()
++ void omimonsToString()
++ void print()
+}
+
+
+class OmimonFull.Omidex.Omimons.OmimonInstance {
+- {static} int xpLevel
+- {static} int maxLevel
+- OmimonType omimonType
+- String name
+- int currentHealth
+- int maxHealth
+- int defense
+- int speed
+- int level
+- int possibleHealing
+- boolean isDead
+- boolean canEvolve
+- int XP
+~ Random random
+- boolean isWild
+- List<Attack> attacks
++ <<Create>> OmimonInstance(OmimonType)
++ <<Create>> OmimonInstance()
++ boolean isDead()
++ OmimonType getOmimonType()
++ int getCurrentHealth()
++ int getMaxHealth()
++ int getDefense()
++ int getLevel()
++ int getSpeed()
++ String getName()
++ Types[] getOmimonTypes()
++ boolean isWild()
++ void setWild()
++ List<Attack> getAttacks()
++ int getEvoLevel()
++ void healToFull()
++ void attackOtherOmimon(AttackStrategy,OmimonInstance)
+- void gainXP()
++ void nextLevel()
++ Attack chooseNextAttack(AttackStrategy,Types[])
++ void reset()
++ void getAttacked(int)
++ void tryToEvolve()
+- void evolve()
++ String toString()
++ void printAll()
+}
+
+
+
+
+OmimonFull.Omidex.Omimons.OmimonType +.. OmimonFull.Omidex.Omimons.OmimonType$OmimonBuilder
+OmimonFull.Strategys.AttackStrategies.AttackStrategy <|.. OmimonFull.Strategys.AttackStrategies.SmartAttackStrategy
+OmimonFull.AddEff.AttackEffect <|.. OmimonFull.AddEff.StrikeAttack
+OmimonFull.Strategys.ActionStrategy <|.. OmimonFull.Strategys.SmartStrategy
+OmimonFull.Attack.IAttack <|.. OmimonFull.Attack.Attack
+OmimonFull.Attack.Attack +.. OmimonFull.Attack.Attack$AttackBuilder
+OmimonFull.Strategys.ActionStrategy <|.. OmimonFull.Strategys.CarefulStrategy
+OmimonFull.Exceptions.Exception <|-- OmimonFull.Exceptions.NotEnoughOmimonsToPlayException
+OmimonFull.Exceptions.Exception <|-- OmimonFull.Exceptions.NoMoreOmimonException
+OmimonFull.AddEff.AttackEffect <|.. OmimonFull.AddEff.HealingEffect
+OmimonFull.Strategys.AttackStrategies.AttackStrategy <|.. OmimonFull.Strategys.AttackStrategies.RandomStrategy
+OmimonFull.Trainer.BattleParticipant <|.. OmimonFull.Trainer.WildOmimon
+OmimonFull.Strategys.AttackStrategies.AttackStrategy <|.. OmimonFull.Strategys.AttackStrategies.PowerStrategy
+OmimonFull.AddEff.AttackEffect <|.. OmimonFull.AddEff.CriticalAttack
+OmimonFull.Strategys.ActionStrategy <|.. OmimonFull.Strategys.ConfidentStrategy
+OmimonFull.Trainer.BattleParticipant <|.. OmimonFull.Trainer.Trainer
+@enduml
